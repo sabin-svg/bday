@@ -2,57 +2,93 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>My Words For You 💖</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 <style>
+*{margin:0;padding:0;box-sizing:border-box}
 body{
-  margin:0;height:100vh;
+  height:100vh;
   background:radial-gradient(circle at bottom,#400000,#000);
-  color:white;font-family:"Poppins",sans-serif;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  text-align:center;overflow:hidden;
+  font-family:'Poppins',sans-serif;
+  color:#fff;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  overflow:hidden;
+  padding:20px;
 }
-h1{color:#ff6b81;font-size:2.3em;margin-bottom:20px}
-p{font-size:1.1em;max-width:600px;line-height:1.5;color:#ffd9d9}
-button{margin-top:30px;padding:10px 20px;border:none;border-radius:10px;background:#ff6b81;color:white;font-weight:bold;cursor:pointer}
-button:hover{background:#ff889d}
-.heart{position:absolute;animation:float 6s linear infinite;opacity:0.6}
+h1{
+  font-family:'Great Vibes',cursive;
+  font-size:3em;
+  color:#ff6b81;
+  text-shadow:0 0 25px rgba(255,107,129,0.6);
+  margin-bottom:20px;
+}
+.message{
+  max-width:650px;
+  font-size:1.1em;
+  line-height:1.6;
+  color:#ffe2e2;
+  background:rgba(255,255,255,0.06);
+  border-radius:18px;
+  padding:24px;
+  box-shadow:0 8px 30px rgba(0,0,0,0.5);
+  backdrop-filter:blur(4px);
+}
+.message p{margin:12px 0;}
+button{
+  margin-top:30px;
+  padding:12px 28px;
+  border:none;
+  border-radius:30px;
+  background:linear-gradient(90deg,#ff496c,#ff859b);
+  color:white;
+  font-weight:600;
+  cursor:pointer;
+  box-shadow:0 0 20px rgba(255,107,129,0.5);
+  transition:.3s;
+}
+button:hover{transform:scale(1.05)}
+.heart{position:absolute;color:#ffbcbc;animation:float 9s linear infinite;opacity:.6}
 @keyframes float{0%{transform:translateY(100vh) scale(1);}100%{transform:translateY(-10vh) scale(1.5);opacity:0;}}
 </style>
 </head>
 <body>
 <h1 id="title"></h1>
-<p>
-You are not just my love,<br>
-you are my reason to smile every single day.<br>
-I don’t need a perfect world,<br>
-I just need you in mine.<br><br>
-Happy Birthday, <span id="name"></span>❤️<br>
-From your one and only — Sabin 💞
-</p>
+<div class="message">
+  <p>Every heartbeat of mine whispers your name.</p>
+  <p>When I look into your eyes, I see the home I’ve always searched for.</p>
+  <p>You’ve filled my world with laughter, warmth, and gentle chaos — the kind that feels like love.</p>
+  <p>No poem could ever hold the way you make me feel, but I still try, every single day, to show it in a thousand small ways.</p>
+  <p>Happy Birthday, <span id="name"></span>❤️</p>
+  <p>— Forever yours, Sabin 💞</p>
+</div>
+
 <button onclick="restart()">Replay From Start 🔁</button>
+
 <audio id="music" loop autoplay>
 <!-- later add: <source src="princess.mp3" type="audio/mpeg"> -->
 </audio>
+
 <script>
-const name=localStorage.getItem("bdayName")||"Princess";
-document.getElementById("name").textContent=name;
-document.getElementById("title").textContent="For You, "+name;
+const n=localStorage.getItem("bdayName")||"Princess";
+document.getElementById("name").textContent=n;
+document.getElementById("title").textContent="For You, "+n;
 
-function restart(){
-  localStorage.removeItem("bdayName");
-  window.location.href="index.html";
-}
+function restart(){localStorage.removeItem("bdayName");window.location.href="index.html";}
 
-// floating hearts
+// hearts background
 for(let i=0;i<30;i++){
-  const span=document.createElement('span');
-  span.textContent='❤️';
-  span.classList.add('heart');
-  span.style.left=Math.random()*100+'vw';
-  span.style.animationDelay=Math.random()*5+'s';
-  span.style.fontSize=Math.random()*20+20+'px';
-  document.body.appendChild(span);
+  const h=document.createElement('span');
+  h.className='heart'; h.textContent='❤️';
+  h.style.left=Math.random()*100+'vw';
+  h.style.fontSize=Math.random()*20+20+'px';
+  h.style.animationDuration=(6+Math.random()*5)+'s';
+  h.style.animationDelay=Math.random()*5+'s';
+  document.body.appendChild(h);
 }
 </script>
 </body>
