@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our Memories ❤️</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&family=Great+Vibes&display=swap" rel="stylesheet">
+<style>
+body{
+  margin:0; padding:0;
+  height:100vh; width:100vw;
+  background:url("assets/Heart-shape-tree-with-red-leaves-on-red-flower-field.jpg") center/cover no-repeat;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  font-family:'Poppins',sans-serif; color:white; position:relative;
+}
+body::after{
+  content:"";position:absolute;inset:0;
+  background:rgba(0,0,0,0.45);backdrop-filter:blur(2px);
+}
+.title{
+  position:relative;z-index:10;
+  font-family:'Great Vibes',cursive;font-size:48px;margin-bottom:16px;
+  color:#ffe4ea;text-shadow:0 0 22px rgba(255,90,120,0.6);
+}
+.album{
+  position:relative;z-index:10;
+  width:330px;height:420px;perspective:1400px;
+}
+.page{
+  width:100%;height:100%;position:absolute;top:0;left:0;
+  transform-origin:left center;transition:transform 0.8s ease;
+  border-radius:12px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,0.6);
+}
+.page img{
+  width:100%;height:100%;object-fit:cover;
+}
+button{
+  margin-top:24px;
+  padding:12px 28px;border:none;border-radius:30px;
+  background:linear-gradient(90deg,#ff2f4b,#ff6b81);
+  color:white;font-weight:600;cursor:pointer;
+  box-shadow:0 0 20px rgba(255,80,120,0.7);
+}
+button:hover{transform:scale(1.05);}
+</style>
+</head>
+<body>
+
+<audio id="bgMusic" loop>
+  <source src="assets/Sidu Sidu Song Ringtone Download Tamil Mp3 Naa Songs.mp3" type="audio/mpeg">
+</audio>
+
+<div class="title">Our Memories ❤️</div>
+
+<div class="album">
+  <div class="page" id="p1"><img src="assets/hand-holding-in-love.jpg"></div>
+  <div class="page" id="p2"><img src="assets/VD1071_main_hd.webp"></div>
+  <div class="page" id="p3"><img src="assets/sunsetcouple.jpg"></div>
+  <div class="page" id="p4"><img src="assets/hearthands.jpg"></div>
+</div>
+
+<button onclick="next()">Next ➜</button>
+
+<script>
+// music resume
+const music = document.getElementById("bgMusic");
+document.addEventListener("click",()=>{ music.volume=0.4; music.play(); },{once:true});
+
+// flipping logic
+let pages = [p1,p2,p3,p4];
+let index = 0;
+function flip(){
+  if(index < pages.length-1){
+    pages[index].style.transform = "rotateY(-180deg)";
+    index++;
+  } else {
+    pages.forEach(p=>p.style.transform="");
+    index=0;
+  }
+}
+setInterval(flip,2000);
+
+function next(){ window.location.href="final.html"; }
+</script>
+
+</body>
+</html>

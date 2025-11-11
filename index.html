@@ -3,156 +3,85 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>For My Princess 💞</title>
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<title>Hey My Beautiful ❤️</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
+*{margin:0;padding:0;box-sizing:border-box;}
 body{
   height:100vh;
-  width:100%;
-  overflow:hidden;
+  width:100vw;
+  background:url("assets/Heart-shape-tree-with-red-leaves-on-red-flower-field.jpg") center/cover no-repeat;
+  display:flex;align-items:center;justify-content:center;
   font-family:'Poppins',sans-serif;
-  color:#fff;
-  background:radial-gradient(circle at bottom,#ff3c58 0%,#400000 80%);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-  text-align:center;
-  position:relative;
+  position:relative;text-align:center;color:#fff;
 }
-
-/* animated hearts background (behind content) */
-.heart{
-  position:absolute;
-  color:#ffccd5;
-  animation: floatUp 10s linear infinite;
-  opacity:0.7;
-  z-index:0; /* <---- important */
+body::after{
+  content:"";position:absolute;inset:0;
+  background:rgba(0,0,0,0.35);backdrop-filter:blur(2px);
 }
-@keyframes floatUp{
-  0%{transform:translateY(100vh) scale(1);}
-  100%{transform:translateY(-10vh) scale(1.5);opacity:0;}
-}
-
-/* glowing particles (behind) */
-.particles{
-  position:absolute;
-  inset:0;
-  background:radial-gradient(circle at 20% 80%,rgba(255,255,255,0.1) 0%,transparent 60%),
-              radial-gradient(circle at 80% 20%,rgba(255,255,255,0.08) 0%,transparent 60%);
-  animation:bgShift 6s infinite alternate;
-  z-index:0; /* <---- behind too */
-}
-@keyframes bgShift{
-  0%{filter:hue-rotate(0deg);}
-  100%{filter:hue-rotate(45deg);}
-}
-
-/* content container */
 .main{
-  position:relative;
-  z-index:10; /* <---- above hearts */
-  display:flex;
-  flex-direction:column;
-  align-items:center;
+  position:relative;z-index:10;
+  background:rgba(255,255,255,0.06);
+  padding:32px 38px;border-radius:18px;
+  backdrop-filter:blur(6px);
+  box-shadow:0 0 30px rgba(0,0,0,0.5);
 }
-
 h1{
   font-family:'Great Vibes',cursive;
-  font-size:3.2em;
-  margin-bottom:8px;
-  animation:fadeInDown 1.5s ease forwards;
+  font-size:44px;margin-bottom:10px;
 }
-@keyframes fadeInDown{
-  from{opacity:0;transform:translateY(-40px);}
-  to{opacity:1;transform:translateY(0);}
-}
-p{
-  font-size:1.2em;
-  margin-bottom:20px;
-  opacity:0;
-  animation:fadeIn 2s ease forwards;
-  animation-delay:1s;
-}
-@keyframes fadeIn{to{opacity:1;}}
-
+p{margin-bottom:20px;color:#ffe9ef;}
 input{
-  padding:12px 18px;
-  border:none;
-  border-radius:10px;
-  font-size:1em;
-  outline:none;
-  text-align:center;
-  box-shadow:0 0 15px rgba(255,255,255,0.2);
-  margin-bottom:16px;
-  background:rgba(255,255,255,0.2);
-  color:white;
-  z-index:10;
+  padding:12px 18px;border:none;border-radius:10px;
+  background:rgba(255,255,255,0.22);color:white;
+  width:230px;text-align:center;margin-bottom:20px;outline:none;
 }
-input::placeholder{color:#ffe4e8}
-
 button{
-  padding:12px 26px;
-  border:none;
-  border-radius:30px;
-  font-size:1.1em;
-  background:linear-gradient(90deg,#ff496c,#ff859b);
-  color:white;
-  font-weight:600;
-  cursor:pointer;
-  transition:0.4s;
-  box-shadow:0 0 20px rgba(255,107,129,0.4);
+  padding:12px 26px;border:none;border-radius:30px;
+  background:linear-gradient(90deg,#ff2f4b,#ff6b81);
+  color:white;font-weight:600;cursor:pointer;
+  box-shadow:0 0 18px rgba(255,80,120,0.7);
+  transition:0.3s;
 }
-button:hover{
-  transform:scale(1.05);
-  box-shadow:0 0 30px rgba(255,107,129,0.8);
-}
-
-/* small love quote bottom */
-.quote{
-  position:absolute;
-  bottom:25px;
-  font-style:italic;
-  color:#ffd6d6;
-  font-size:1em;
-  opacity:0.9;
-  z-index:10;
-}
+button:hover{transform:scale(1.05);}
+small{display:block;margin-top:8px;color:#ffdce4;}
 </style>
 </head>
 <body>
 
-<div class="particles"></div>
+<audio id="bgMusic" loop>
+  <source src="assets/music.mp3" type="audio/mpeg">
+</audio>
 
 <div class="main">
   <h1>Hey My Beautiful ❤️</h1>
   <p>Before we start this surprise, tell me your name Princess 💕</p>
-  <input type="text" id="name" placeholder="Type your name here...">
-  <button onclick="saveName()">Continue ➜</button>
+
+  <input type="text" id="name" placeholder="Type your name...">
+  
+  <button onclick="next()">Continue ➜</button>
+  <small>(Tap anywhere if music doesn't start)</small>
 </div>
 
-<div class="quote">“Every heartbeat of mine says your name.”</div>
-
 <script>
-function saveName(){
-  let n=document.getElementById('name').value.trim();
-  if(!n){n="Princess";}
-  localStorage.setItem("bdayName",n);
-  window.location.href="cake.html";
-}
+const music = document.getElementById("bgMusic");
 
-// Floating hearts (behind)
-for(let i=0;i<25;i++){
-  let span=document.createElement("span");
-  span.classList.add("heart");
-  span.textContent="❤️";
-  span.style.left=Math.random()*100+"vw";
-  span.style.fontSize=(Math.random()*20+16)+"px";
-  span.style.animationDuration=(5+Math.random()*5)+"s";
-  span.style.animationDelay=Math.random()*5+"s";
-  document.body.appendChild(span);
+// Try autoplay
+document.addEventListener("click", () => {
+ music.volume = 0.35;
+ music.play().catch(()=>{});
+}, { once:true });
+
+function next(){
+  let n = document.getElementById("name").value.trim();
+  if(!n){n = "My Love";}
+  localStorage.setItem("bdayName", n);
+  // Save that music should stay playing
+  music.play();
+  window.location.href = "cake.html";
 }
 </script>
+
 </body>
 </html>
