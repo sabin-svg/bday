@@ -22,29 +22,40 @@ body{
   position:relative;
 }
 
-/* animated hearts background */
+/* animated hearts background (behind content) */
 .heart{
   position:absolute;
   color:#ffccd5;
   animation: floatUp 10s linear infinite;
   opacity:0.7;
+  z-index:0; /* <---- important */
 }
 @keyframes floatUp{
   0%{transform:translateY(100vh) scale(1);}
   100%{transform:translateY(-10vh) scale(1.5);opacity:0;}
 }
 
-/* glowing particles */
+/* glowing particles (behind) */
 .particles{
   position:absolute;
   inset:0;
   background:radial-gradient(circle at 20% 80%,rgba(255,255,255,0.1) 0%,transparent 60%),
               radial-gradient(circle at 80% 20%,rgba(255,255,255,0.08) 0%,transparent 60%);
   animation:bgShift 6s infinite alternate;
+  z-index:0; /* <---- behind too */
 }
 @keyframes bgShift{
   0%{filter:hue-rotate(0deg);}
   100%{filter:hue-rotate(45deg);}
+}
+
+/* content container */
+.main{
+  position:relative;
+  z-index:10; /* <---- above hearts */
+  display:flex;
+  flex-direction:column;
+  align-items:center;
 }
 
 h1{
@@ -64,9 +75,7 @@ p{
   animation:fadeIn 2s ease forwards;
   animation-delay:1s;
 }
-@keyframes fadeIn{
-  to{opacity:1;}
-}
+@keyframes fadeIn{to{opacity:1;}}
 
 input{
   padding:12px 18px;
@@ -79,6 +88,7 @@ input{
   margin-bottom:16px;
   background:rgba(255,255,255,0.2);
   color:white;
+  z-index:10;
 }
 input::placeholder{color:#ffe4e8}
 
@@ -107,6 +117,7 @@ button:hover{
   color:#ffd6d6;
   font-size:1em;
   opacity:0.9;
+  z-index:10;
 }
 </style>
 </head>
@@ -114,16 +125,16 @@ button:hover{
 
 <div class="particles"></div>
 
-<h1>Hey My Beautiful ❤️</h1>
-<p>Before we start this surprise, tell me your name Princess 💕</p>
-
-<input type="text" id="name" placeholder="Type your name here...">
-<button onclick="saveName()">Continue ➜</button>
+<div class="main">
+  <h1>Hey My Beautiful ❤️</h1>
+  <p>Before we start this surprise, tell me your name Princess 💕</p>
+  <input type="text" id="name" placeholder="Type your name here...">
+  <button onclick="saveName()">Continue ➜</button>
+</div>
 
 <div class="quote">“Every heartbeat of mine says your name.”</div>
 
 <script>
-// Save name and move to cake page
 function saveName(){
   let n=document.getElementById('name').value.trim();
   if(!n){n="Princess";}
@@ -131,7 +142,7 @@ function saveName(){
   window.location.href="cake.html";
 }
 
-// Floating hearts background
+// Floating hearts (behind)
 for(let i=0;i<25;i++){
   let span=document.createElement("span");
   span.classList.add("heart");
