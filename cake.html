@@ -4,75 +4,154 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Happy Birthday 🎂</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 <style>
+*{margin:0;padding:0;box-sizing:border-box}
 body{
-  margin:0;height:100vh;
-  background:linear-gradient(160deg,#4a0000,#ff2448);
-  color:white;
-  font-family:"Poppins",sans-serif;
+  height:100vh;
+  background:radial-gradient(circle at top,#ff3c58 0%,#3b0000 85%);
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
   text-align:center;
+  font-family:'Poppins',sans-serif;
+  color:#fff;
   overflow:hidden;
 }
-h1{font-size:2.5em;margin-bottom:5px}
-.cake{
-  width:200px;height:160px;background:#fff;border-radius:10px;
-  position:relative;margin:30px auto;
-  box-shadow:0 6px 30px rgba(0,0,0,0.4);
+
+/* heading */
+h1{
+  font-family:'Great Vibes',cursive;
+  font-size:3em;
+  color:#fff;
+  text-shadow:0 0 20px rgba(255,107,129,0.7);
+  margin-bottom:6px;
 }
-.cake::before{
-  content:"";position:absolute;left:0;right:0;top:-30px;height:30px;
-  background:#ff6b81;border-radius:10px 10px 0 0;
+p{font-size:1.1em;margin-bottom:16px;color:#ffe0e6}
+
+/* cake container */
+.cake-area{position:relative;width:320px;height:280px;perspective:900px}
+.cake{
+  position:absolute;
+  bottom:0;left:50%;transform:translateX(-50%);
+  width:260px;height:200px;
+  background:linear-gradient(#3a1b0b,#2b1308 60%,#210b04);
+  border-radius:20px 20px 6px 6px;
+  box-shadow:0 15px 50px rgba(0,0,0,0.5);
+  overflow:hidden;
+}
+.cake::before{/* cream top */
+  content:"";
+  position:absolute;top:0;left:0;right:0;height:45px;
+  background:repeating-linear-gradient(
+    -45deg,#fff 0 6px,#fceaea 6px 12px);
+  border-radius:20px 20px 0 0;
+}
+.cherries{
+  position:absolute;top:-12px;left:50%;transform:translateX(-50%);
+  display:flex;gap:22px;
+}
+.cherry{
+  width:22px;height:22px;background:radial-gradient(circle at 30% 30%,#ff667d,#b0001a);
+  border-radius:50%;box-shadow:0 0 6px rgba(255,0,40,0.6);
 }
 .candle{
-  position:absolute;left:50%;top:-45px;transform:translateX(-50%);
-  width:10px;height:40px;background:#ffd166;border-radius:5px;
+  position:absolute;left:50%;top:-55px;transform:translateX(-50%);
+  width:12px;height:50px;background:#ffd166;border-radius:5px;
 }
 .flame{
-  position:absolute;left:50%;top:-18px;transform:translateX(-50%);
-  width:12px;height:18px;background:radial-gradient(circle at bottom,#fff,#ff8800);
-  border-radius:50%;
-  animation:flicker 0.4s infinite;
+  position:absolute;left:50%;top:-25px;transform:translateX(-50%);
+  width:18px;height:26px;border-radius:50% 50% 40% 40%;
+  background:radial-gradient(circle at bottom,#fff,#ff8800 70%);
+  animation:flicker 0.4s infinite alternate;
+  box-shadow:0 0 25px 6px #ff8800;
 }
-@keyframes flicker{
-  0%,100%{transform:translateX(-50%) scale(1);}
-  50%{transform:translateX(-50%) scale(1.2);}
+@keyframes flicker{from{transform:translateX(-50%) scale(1);}to{transform:translateX(-50%) scale(1.3);}}
+.cake-shadow{
+  position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);
+  width:240px;height:18px;background:rgba(0,0,0,0.5);
+  filter:blur(10px);border-radius:50%;
 }
+
+/* buttons */
 button{
-  margin-top:20px;padding:10px 20px;border:none;border-radius:10px;
-  background:#ff6b81;color:white;font-size:1em;font-weight:bold;cursor:pointer;
-  transition:0.3s;
+  margin-top:28px;padding:12px 28px;border:none;border-radius:30px;
+  background:linear-gradient(90deg,#ff496c,#ff859b);
+  color:white;font-weight:600;cursor:pointer;
+  font-size:1em;transition:.3s;
+  box-shadow:0 0 20px rgba(255,107,129,0.5);
 }
-button:hover{background:#ff889d}
+button:hover{transform:scale(1.05)}
+
+/* confetti */
+canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
 </style>
 </head>
 <body>
-<h1 id="wish"></h1>
-<p>Tap the cake to cut it 🎉</p>
+<canvas id="confetti"></canvas>
+<h1 id="title"></h1>
+<p>Touch the cake to cut it 🎂💫</p>
 
-<div class="cake" onclick="cutCake()">
-  <div class="candle"><div class="flame"></div></div>
+<div class="cake-area" onclick="cutCake()">
+  <div class="cake">
+    <div class="cherries">
+      <div class="cherry"></div>
+      <div class="cherry"></div>
+      <div class="cherry"></div>
+    </div>
+    <div class="candle"><div class="flame"></div></div>
+    <div class="cake-shadow"></div>
+  </div>
 </div>
 
 <button onclick="next()">See Our Memories ❤️</button>
 
 <script>
-const name=localStorage.getItem("bdayName")||"Princess";
-document.getElementById("wish").textContent="Happy Birthday, "+name+"!";
+/* personalize */
+const n = localStorage.getItem("bdayName") || "Princess";
+document.getElementById("title").textContent = "Happy Birthday, " + n + "!";
 
+/* cake cut animation */
+let cut=false;
 function cutCake(){
+  if(cut)return;
+  cut=true;
   const cake=document.querySelector('.cake');
-  cake.style.transition='transform 0.8s ease';
-  cake.style.transform='rotateX(20deg) scale(0.9)';
-  setTimeout(()=>{cake.style.opacity='0.8';},800);
+  cake.style.transition='transform 1s ease';
+  cake.style.transform='rotateX(25deg) translateY(10px) scale(0.95)';
+  spawnConfetti(150);
 }
 
-function next(){
-  window.location.href="memories.html";
+/* move to next */
+function next(){ window.location.href="memories.html"; }
+
+/* simple confetti */
+const ctx=document.getElementById("confetti").getContext("2d");
+let W,H,pieces=[];
+function resize(){W=ctx.canvas.width=innerWidth;H=ctx.canvas.height=innerHeight;}
+window.addEventListener("resize",resize);resize();
+function random(min,max){return Math.random()*(max-min)+min;}
+function spawnConfetti(n=100){
+  for(let i=0;i<n;i++){
+    pieces.push({x:random(0,W),y:random(0,H/2),
+      r:random(4,10),vy:random(2,6),vx:random(-2,2),
+      color:`hsl(${random(0,360)},80%,60%)`});
+  }
 }
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  pieces.forEach(p=>{
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=p.color;
+    ctx.fill();
+    p.x+=p.vx;p.y+=p.vy;
+  });
+  pieces=pieces.filter(p=>p.y<H);
+  requestAnimationFrame(draw);
+}
+draw();
 </script>
 </body>
 </html>
