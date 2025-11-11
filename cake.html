@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday 🎂</title>
+<style>
+body{
+  margin:0;height:100vh;
+  background:linear-gradient(160deg,#4a0000,#ff2448);
+  color:white;
+  font-family:"Poppins",sans-serif;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  overflow:hidden;
+}
+h1{font-size:2.5em;margin-bottom:5px}
+.cake{
+  width:200px;height:160px;background:#fff;border-radius:10px;
+  position:relative;margin:30px auto;
+  box-shadow:0 6px 30px rgba(0,0,0,0.4);
+}
+.cake::before{
+  content:"";position:absolute;left:0;right:0;top:-30px;height:30px;
+  background:#ff6b81;border-radius:10px 10px 0 0;
+}
+.candle{
+  position:absolute;left:50%;top:-45px;transform:translateX(-50%);
+  width:10px;height:40px;background:#ffd166;border-radius:5px;
+}
+.flame{
+  position:absolute;left:50%;top:-18px;transform:translateX(-50%);
+  width:12px;height:18px;background:radial-gradient(circle at bottom,#fff,#ff8800);
+  border-radius:50%;
+  animation:flicker 0.4s infinite;
+}
+@keyframes flicker{
+  0%,100%{transform:translateX(-50%) scale(1);}
+  50%{transform:translateX(-50%) scale(1.2);}
+}
+button{
+  margin-top:20px;padding:10px 20px;border:none;border-radius:10px;
+  background:#ff6b81;color:white;font-size:1em;font-weight:bold;cursor:pointer;
+  transition:0.3s;
+}
+button:hover{background:#ff889d}
+</style>
+</head>
+<body>
+<h1 id="wish"></h1>
+<p>Tap the cake to cut it 🎉</p>
+
+<div class="cake" onclick="cutCake()">
+  <div class="candle"><div class="flame"></div></div>
+</div>
+
+<button onclick="next()">See Our Memories ❤️</button>
+
+<script>
+const name=localStorage.getItem("bdayName")||"Princess";
+document.getElementById("wish").textContent="Happy Birthday, "+name+"!";
+
+function cutCake(){
+  const cake=document.querySelector('.cake');
+  cake.style.transition='transform 0.8s ease';
+  cake.style.transform='rotateX(20deg) scale(0.9)';
+  setTimeout(()=>{cake.style.opacity='0.8';},800);
+}
+
+function next(){
+  window.location.href="memories.html";
+}
+</script>
+</body>
+</html>
