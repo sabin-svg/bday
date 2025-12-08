@@ -6,8 +6,6 @@
 <title>Your Cake ❤️</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/three@0.150.0/build/three.min.js"></script>
-<script src="https://unpkg.com/three@0.150.0/examples/js/controls/OrbitControls.js"></script>
 
 <style>
 body{
@@ -22,24 +20,71 @@ body::after{
   content:"";position:absolute;inset:0;
   background:rgba(0,0,0,0.45);backdrop-filter:blur(2px);
 }
+
 .content{position:relative;z-index:10;}
+
 h1{
   font-family:'Great Vibes',cursive;font-size:52px;margin-bottom:10px;
   color:#ffdce9;text-shadow:0 0 20px rgba(255,60,120,0.6);
 }
 p{margin-bottom:18px;color:#ffe5eb;}
-#cakeCanvas{
-  width:340px;height:340px;
-  background:rgba(255,255,255,0.05);
-  border-radius:50%;backdrop-filter:blur(5px);
-  box-shadow:0 0 40px rgba(255,0,60,0.4);
+
+.cakeBox{
+  position:relative;
+  width:330px;
+  height:auto;
 }
+
+#cakeImage{
+  width:100%;
+  border-radius:20px;
+  transition:0.3s;
+  box-shadow:0 0 40px rgba(255,0,60,0.4);
+  cursor:pointer;
+}
+
+/* Slice overlay */
+.slice{
+  position:absolute;
+  left:0; top:0;
+  width:100%; height:100%;
+  background:url("images/Red-Velvet-Layer-Cake.jpg") center/cover no-repeat;
+  border-radius:20px;
+  clip-path:polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
+  transform-origin:left;
+  transform:scaleX(0);
+  transition:0.8s ease;
+  pointer-events:none;
+}
+
+/* Shake animation */
+@keyframes shake {
+  0% { transform:rotate(0deg); }
+  25% { transform:rotate(1deg); }
+  50% { transform:rotate(-1.5deg); }
+  75% { transform:rotate(1deg); }
+  100% { transform:rotate(0deg); }
+}
+
 button{
   padding:12px 30px;border:none;border-radius:30px;cursor:pointer;
   background:linear-gradient(90deg,#ff2f4b,#ff6b81);color:white;font-weight:600;
   box-shadow:0 0 20px rgba(255,60,120,0.7);margin-top:28px;
 }
 button:hover{transform:scale(1.05);}
+
+.confetti{
+  position:fixed;
+  width:14px;height:14px;
+  background:pink;
+  transform:rotate(45deg);
+  border-radius:3px;
+  animation:fall 2s linear forwards;
+}
+
+@keyframes fall {
+  to { transform:translateY(800px) rotate(360deg); opacity:0; }
+}
 </style>
 </head>
 <body>
@@ -50,10 +95,14 @@ button:hover{transform:scale(1.05);}
 
 <div class="content">
   <h1 id="title"></h1>
-  <p>Here is your Red Velvet Cake 🎂 Rotate it with your finger 💕</p>
-  <canvas id="cakeCanvas"></canvas>
+  <p>Click the cake to cut it 🎂💖</p>
 
-  <button onclick="next()">Next ➜</button>
+  <div class="cakeBox">
+    <img id="cakeImage" src="images/Red-Velvet-Layer-Cake.jpg">
+    <div class="slice" id="slice"></div>
+  </div>
+
+  <button id="nextBtn" onclick="next()" style="display:none;">Next ➜</button>
 </div>
 
 <script>
@@ -65,44 +114,44 @@ document.getElementById("title").innerText = "Happy Birthday " + princess + " �
 const music = document.getElementById("bgMusic");
 document.addEventListener("click", () => { music.volume = 0.4; music.play(); }, { once:true });
 
-// THREE.JS Cake
-const canvas = document.getElementById("cakeCanvas");
-const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
-renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+// Cut logic
+let cut = false;
+const cakeImage = document.getElementById("cakeImage");
+const slice = document.getElementById("slice");
+const nextBtn = document.getElementById("nextBtn");
 
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(45, canvas.clientWidth/canvas.clientHeight, 0.1, 1000);
-camera.position.set(0, 1.8, 3);
+cakeImage.addEventListener("click", () =>{
+  if(cut) return;
+  cut = true;
 
-const controls = new THREE.OrbitControls(camera, renderer.domElement);
-controls.enableZoom = false;
+  cakeImage.style.animation = "shake 0.4s";
 
-const light = new THREE.PointLight(0xffffff, 1.5);
-light.position.set(3,4,3);
-scene.add(light);
+  // reveal slice
+  setTimeout(() => {
+    slice.style.transform = "scaleX(1)";
+  }, 200);
 
-const baseGeo = new THREE.CylinderGeometry(1,1,0.7,64);
-const frostingGeo = new THREE.CylinderGeometry(1.05,1.05,0.3,64);
+  // show next button
+  setTimeout(() => {
+    nextBtn.style.display = "inline-block";
+  }, 900);
 
-const redVelvet = new THREE.MeshPhongMaterial({ color:"#a40028" });
-const frosting = new THREE.MeshPhongMaterial({ color:"#fff2f4" });
+  spawnConfetti();
+});
 
-const cakeBase = new THREE.Mesh(baseGeo, redVelvet);
-scene.add(cakeBase);
-
-const cakeTop = new THREE.Mesh(frostingGeo, frosting);
-cakeTop.position.y = 0.5;
-scene.add(cakeTop);
-
-function animate(){
-  cakeBase.rotation.y += 0.005;
-  cakeTop.rotation.y += 0.005;
-  renderer.render(scene,camera);
-  requestAnimationFrame(animate);
+// confetti hearts
+function spawnConfetti(){
+  for(let i=0;i<50;i++){
+    let c = document.createElement("div");
+    c.classList.add("confetti");
+    c.style.left = Math.random()*window.innerWidth + "px";
+    c.style.top = "-20px";
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),2000);
+  }
 }
-animate();
 
-function next(){ window.location.href = "album.html"; }
+function next(){ window.location.href="album.html"; }
 </script>
 
 </body>
