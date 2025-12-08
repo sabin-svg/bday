@@ -32,7 +32,7 @@ canvas{position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;}
 <body>
 
 <audio id="bgMusic" loop autoplay>
-  <source src="assets/Sidu Sidu Song Ringtone Download Tamil Mp3 Naa Songs.mp3" type="audio/mpeg">
+  <source src="assets/music.mp3" type="audio/mpeg">
 </audio>
 
 <canvas id="fx"></canvas>
@@ -56,6 +56,7 @@ let text = [
   "My happiness.",
   "My cutest problem and sweetest solution 😉❤️"
 ];
+
 let i=0;
 function type(){
   if(i<text.length){
@@ -71,6 +72,7 @@ function again(){
   window.location.href="index.html";
 }
 
+// floating hearts
 const c = fx, ctx = c.getContext("2d");
 let W,H;function resize(){W=c.width=innerWidth;H=c.height=innerHeight;}resize();
 window.onresize=resize;
