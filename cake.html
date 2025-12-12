@@ -8,156 +8,228 @@
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
-body{
-  margin:0;
-  height:100vh;
-  background: radial-gradient(circle, #ff7aa8, #ff4f8b, #d60055);
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  overflow:hidden;
-  color:white;
-  font-family:'Poppins',sans-serif;
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
+    overflow: hidden;
+    position: relative;
+    color: white;
+    background: #ff5f8c; /* fallback color */
 }
 
-h1{
-  font-family:'Great Vibes',cursive;
-  font-size:50px;
-  text-shadow:0 0 18px rgba(255,100,150,1);
+/* Full page text background */
+#bg-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        45deg,
+        #ffb6c1 0px,
+        #ffb6c1 2px,
+        #ff79b1 2px,
+        #ff79b1 4px
+    );
+    z-index: 1;
+    pointer-events: none;
 }
 
-#cakeBox{
-  width:260px;
-  position:relative;
-  cursor:pointer;
+#bg-text span {
+    display: inline-block;
+    color: rgba(255,255,255,0.05);
+    font-size: 60px;
+    font-weight: 700;
+    transform: rotate(-20deg);
+    margin: 20px;
 }
 
-/* Cake Image */
-#cakeFull{
-  width:260px;
-  transition:0.4s ease;
+/* Title */
+h1 {
+    font-family: 'Great Vibes', cursive;
+    font-size: 48px;
+    text-shadow: 0 0 18px rgba(255,150,200,0.9);
+    position: absolute;
+    top: 30px;
+    text-align: center;
+    width: 100%;
+    z-index: 10;
 }
 
-.half{
-  position:absolute;
-  width:50%;
-  top:0;
-  opacity:0;
-  transition:0.7s ease;
-}
-#rightHalf{ left:50%; }
-
-#nameTag{
-  position:absolute;
-  width:100%;
-  bottom:20px;
-  text-align:center;
-  font-size:22px;
-  color:white;
-  font-weight:700;
-  text-shadow:0 0 8px black;
-  pointer-events:none;
+/* Cake container */
+#cakeBox {
+    width: 260px;
+    cursor: pointer;
+    position: relative;
+    z-index: 10;
 }
 
-button{
-  margin-top:20px;
-  display:none;
-  padding:12px 24px;
-  border-radius:30px;
-  background:#ff4e84;
-  color:white;
-  font-size:17px;
-  border:none;
-  cursor:pointer;
+/* halves */
+.half {
+    position: absolute;
+    top: 0;
+    width: 50%;
+    opacity: 0;
+    transition: 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
-button:hover{ transform:scale(1.1); }
+#rightHalf { left: 50%; }
+#fullCake { width: 260px; transition: 0.5s ease; }
 
-.heart{
-  position:fixed;
-  font-size:28px;
-  animation:floatUp 1.4s ease-out forwards;
+/* Stylish name on cake */
+.nameText {
+    font-family: 'Great Vibes', cursive;
+    font-size: 32px;
+    font-weight: 700;
+    fill: white;
+    text-shadow: 0 0 2px black;
 }
 
-@keyframes floatUp{
-  0%{ opacity:1; transform:translateY(0) scale(1); }
-  100%{ opacity:0; transform:translateY(-150px) scale(1.7); }
+/* Hearts when cake is cut */
+.heart {
+    position: fixed;
+    font-size: 26px;
+    animation: floatUp 1.5s ease-out forwards;
 }
+
+@keyframes floatUp {
+    0% { opacity:1; transform:translateY(0) scale(1);}
+    100% { opacity:0; transform:translateY(-150px) scale(1.5);}
+}
+
+/* Next button */
+button {
+    margin-top: 20px;
+    padding: 12px 26px;
+    border: none;
+    border-radius: 30px;
+    font-size: 17px;
+    background: #ff4d94;
+    color: white;
+    display: none;
+    cursor: pointer;
+    box-shadow: 0 0 12px rgba(255,80,120,0.9);
+}
+button:hover { transform: scale(1.1); }
+
 </style>
 </head>
 <body>
+
+<!-- Repeating text background -->
+<div id="bg-text"></div>
 
 <h1 id="title"></h1>
 
 <div id="cakeBox">
 
-  <!-- FULL CAKE IMAGE -->
-  <img id="cakeFull" src="images/cake.png">
+<!-- FULL CAKE -->
+<svg id="fullCake" viewBox="0 0 300 300">
 
-  <!-- NAME ON CAKE -->
-  <div id="nameTag"></div>
+  <!-- Shadow -->
+  <ellipse cx="150" cy="260" rx="120" ry="22" fill="#00000033"></ellipse>
 
-  <!-- LEFT HALF -->
-  <img id="leftHalf" class="half" src="images/cake.png">
+  <!-- Bottom Layer -->
+  <ellipse cx="150" cy="210" rx="120" ry="40" fill="#ff5f8c" stroke="#000" stroke-width="3"></ellipse>
+  <rect x="30" y="150" width="240" height="70" rx="30" fill="#ff5f8c" stroke="#000" stroke-width="3"></rect>
 
-  <!-- RIGHT HALF -->
-  <img id="rightHalf" class="half" src="images/cake.png">
+  <!-- Drip icing bottom -->
+  <path d="M30 150 Q50 180 70 150 Q95 180 120 150 Q145 180 170 150 Q195 180 220 150 Q245 180 270 150" 
+        fill="white" stroke="#000" stroke-width="3"></path>
+
+  <!-- NAME -->
+  <text id="nameFull" x="150" y="205" class="nameText" text-anchor="middle"></text>
+
+  <!-- Top Layer -->
+  <ellipse cx="150" cy="130" rx="90" ry="30" fill="#ff5f8c" stroke="#000" stroke-width="3"></ellipse>
+  <rect x="60" y="90" width="180" height="50" rx="25" fill="#ff5f8c" stroke="#000" stroke-width="3"></rect>
+
+  <!-- Drip icing top -->
+  <path d="M60 90 Q80 120 100 90 Q120 120 140 90 Q160 120 180 90 Q200 120 220 90"
+        fill="white" stroke="#000" stroke-width="3"></path>
+
+  <!-- Candle -->
+  <rect x="145" y="35" width="10" height="50" fill="#ffe680" stroke="#000" stroke-width="3"></rect>
+
+  <!-- Flame -->
+  <ellipse cx="150" cy="25" rx="10" ry="14" fill="orange" stroke="#000" stroke-width="2"></ellipse>
+
+</svg>
+
+<!-- LEFT HALF -->
+<svg id="leftHalf" class="half" viewBox="0 0 300 300">
+  <clipPath id="clipL"><rect x="0" width="150" height="300"></rect></clipPath>
+  <g clip-path="url(#clipL)">
+    <use href="#fullCake"></use>
+  </g>
+</svg>
+
+<!-- RIGHT HALF -->
+<svg id="rightHalf" class="half" viewBox="0 0 300 300">
+  <clipPath id="clipR"><rect x="150" width="150" height="300"></rect></clipPath>
+  <g clip-path="url(#clipR)">
+    <use href="#fullCake"></use>
+  </g>
+</svg>
 
 </div>
 
 <button id="nextBtn" onclick="next()">Next ➜</button>
 
 <script>
-// Get name
 let girl = localStorage.getItem("bdayName") || "My Love";
-
-// Title
 document.getElementById("title").innerText = "Happy Birthday " + girl + " ❤️";
+document.getElementById("nameFull").textContent = girl;
 
-// Name on cake
-document.getElementById("nameTag").innerText = girl;
-
-// Cake split animation
+// Cake cut hearts
 let cut = false;
-
-document.getElementById("cakeBox").addEventListener("click", () => {
+document.getElementById("cakeBox").addEventListener("click", ()=>{
   if(cut) return;
   cut = true;
-
-  let full = document.getElementById("cakeFull");
-  let left = document.getElementById("leftHalf");
-  let right = document.getElementById("rightHalf");
-
-  full.style.opacity = "0";
-
-  left.style.opacity = "1";
-  right.style.opacity = "1";
-
-  left.style.transform = "translateX(-70px)";
-  right.style.transform = "translateX(70px)";
-
-  burstHearts();
-
-  setTimeout(()=>{
-    document.getElementById("nextBtn").style.display="inline-block";
-  },700);
+  let full = document.getElementById("fullCake");
+  let L = document.getElementById("leftHalf");
+  let R = document.getElementById("rightHalf");
+  full.style.opacity="0";
+  full.style.transform="scale(0.92)";
+  L.style.opacity="1";
+  R.style.opacity="1";
+  L.style.transform="translateX(-80px)";
+  R.style.transform="translateX(80px)";
+  hearts();
+  setTimeout(()=> nextBtn.style.display="inline-block", 900);
 });
 
-// Hearts effect
-function burstHearts(){
-  for(let i=0;i<15;i++){
+function hearts(){
+  for(let i=0;i<18;i++){
     let h=document.createElement("div");
     h.className="heart";
     h.innerHTML="❤️";
-    h.style.left=(window.innerWidth/2 + Math.random()*60 - 30) + "px";
-    h.style.top=(window.innerHeight/2 - 50) + "px";
+    h.style.left=(window.innerWidth/2 + Math.random()*100 - 50)+"px";
+    h.style.top=(window.innerHeight/2 - 20)+"px";
     document.body.appendChild(h);
     setTimeout(()=>h.remove(),1500);
   }
 }
 
 function next(){
-  window.location.href = "album.html";
+  window.location.href="album.html";
+}
+
+// Fill background with repeated text
+const bgText = document.getElementById('bg-text');
+const text = "HAPPY BIRTHDAY MY WIFE   ";
+for(let y=0; y<window.innerHeight; y+=80){
+  for(let x=0; x<window.innerWidth; x+=300){
+    let span = document.createElement('span');
+    span.innerText = text;
+    span.style.position = 'absolute';
+    span.style.left = x + 'px';
+    span.style.top = y + 'px';
+    bgText.appendChild(span);
+  }
 }
 </script>
 
