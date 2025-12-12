@@ -12,7 +12,7 @@
 
 body{
   height:100vh; width:100vw;
-  background:url("images/Heart-shape-tree-with-red-leaves-on-red-flower-field.jpg") center/cover no-repeat;
+  background: radial-gradient(circle at center, #ff4d88, #ff0066, #b30047);
   display:flex; align-items:center; justify-content:center;
   font-family:'Poppins',sans-serif;
   position:relative;
@@ -20,21 +20,21 @@ body{
   color:#fff;
 }
 
-/* dark overlay */
+/* Pink transparent glow */
 body::after{
   content:""; position:absolute; inset:0;
-  background:rgba(0,0,0,0.35);
-  backdrop-filter:blur(3px);
+  background:rgba(255, 100, 150, 0.28);
+  backdrop-filter:blur(2px);
 }
 
 /* Main glass card */
 .main{
   position:relative; z-index:10;
-  background:rgba(255,255,255,0.08);
+  background:rgba(255,255,255,0.1);
   padding:35px 40px;
   border-radius:20px;
   backdrop-filter:blur(8px);
-  box-shadow:0 0 35px rgba(255,0,80,0.4);
+  box-shadow:0 0 35px rgba(255,0,120,0.5);
   text-align:center;
   animation:fadeIn 1.2s ease forwards;
 }
@@ -48,7 +48,7 @@ h1{
   font-family:'Great Vibes',cursive;
   font-size:50px;
   margin-bottom:10px;
-  text-shadow:0 0 20px rgba(255,60,120,0.7);
+  text-shadow:0 0 30px rgba(255,150,200,0.8);
 }
 
 p{
@@ -56,17 +56,19 @@ p{
   margin-bottom:20px;
 }
 
+/* Input */
 input{
   padding:12px 18px;
   border:none;
   border-radius:12px;
-  background:rgba(255,255,255,0.22);
+  background:rgba(255,255,255,0.25);
   color:#fff;
   width:250px;
   text-align:center;
   outline:none;
   margin-bottom:20px;
   font-size:16px;
+  box-shadow:0 0 12px rgba(255,150,200,0.4);
 }
 
 button{
@@ -77,15 +79,15 @@ button{
   color:white;
   font-weight:600;
   cursor:pointer;
-  box-shadow:0 0 18px rgba(255,80,120,0.7);
+  box-shadow:0 0 25px rgba(255,80,120,0.7);
   transition:0.3s;
 }
 
 button:hover{
-  transform:scale(1.05);
+  transform:scale(1.08);
 }
 
-/* Heart particles */
+/* Live floating hearts */
 .heart{
   position:fixed;
   font-size:22px;
@@ -96,7 +98,7 @@ button:hover{
 }
 
 @keyframes fly{
-  0% { transform:translateY(100vh) scale(0.8); opacity:0.8; }
+  0% { transform:translateY(100vh) scale(0.8); opacity:0.9; }
   100% { transform:translateY(-20vh) scale(1.8); opacity:0; }
 }
 </style>
@@ -109,7 +111,7 @@ button:hover{
 
 <div class="main">
   <h1>Hey My Beautiful ❤️</h1>
-  <p>Before we start this surprise, tell me your name Princess 💕</p>
+  <p>Before we start this surprise, tell me your sweet name 💕</p>
 
   <input type="text" id="name" placeholder="Type your name...">
 
@@ -120,13 +122,13 @@ button:hover{
 <script>
 const music = document.getElementById("bgMusic");
 
-// Auto play music
+// Auto play music on first tap
 document.addEventListener("click", () => {
  music.volume = 0.4;
  music.play().catch(()=>{});
 }, { once:true });
 
-// Save name + continue
+// Save name + go to cake page
 function next(){
   let n = document.getElementById("name").value.trim();
   if(!n){ n = "My Love"; }
@@ -134,7 +136,7 @@ function next(){
   window.location.href = "cake.html";
 }
 
-// Floating hearts
+// Floating pink hearts
 function spawnHearts(){
   let h = document.createElement("div");
   h.className = "heart";
@@ -148,6 +150,7 @@ function spawnHearts(){
   setTimeout(()=>h.remove(), 4000);
 }
 
+// create hearts every 250ms
 setInterval(spawnHearts, 250);
 </script>
 
