@@ -3,172 +3,158 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Your Cake ❤️</title>
+<title>Birthday Cake ❤️</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/controls/OrbitControls.js"></script>
-
 <style>
 body{
-  margin:0;padding:0;
-  height:100vh;width:100vw;
-  background:url("images/Heart-shape-tree-with-red-leaves-on-red-flower-field.jpg") center/cover no-repeat;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  text-align:center;color:#fff;font-family:'Poppins',sans-serif;
-  position:relative;
+  margin:0;
+  height:100vh;
+  background: radial-gradient(circle, #ff7aa8, #ff4f8b, #d60055);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+  color:white;
+  font-family:'Poppins',sans-serif;
 }
-body::after{
-  content:"";position:absolute;inset:0;
-  background:rgba(0,0,0,0.45);backdrop-filter:blur(2px);
-}
-.content{position:relative;z-index:10;}
-h1{
-  font-family:'Great Vibes',cursive;font-size:52px;margin-bottom:10px;
-  color:#ffdce9;text-shadow:0 0 20px rgba(255,60,120,0.6);
-}
-p{margin-bottom:18px;color:#ffe5eb;}
-#cakeCanvas{
-  width:330px;height:330px;
-  background:rgba(255,255,255,0.08);
-  border-radius:20px;
-  box-shadow:0 0 40px rgba(255,0,60,0.4);
-  backdrop-filter:blur(4px);
-}
-button{
-  padding:12px 30px;border:none;border-radius:30px;cursor:pointer;
-  background:linear-gradient(90deg,#ff2f4b,#ff6b81);color:white;font-weight:600;
-  box-shadow:0 0 20px rgba(255,60,120,0.7);margin-top:28px;
-  display:none;
-}
-button:hover{transform:scale(1.05);}
 
-/* cute hearts */
+h1{
+  font-family:'Great Vibes',cursive;
+  font-size:50px;
+  text-shadow:0 0 18px rgba(255,100,150,1);
+}
+
+#cakeBox{
+  width:260px;
+  position:relative;
+  cursor:pointer;
+}
+
+/* Cake Image */
+#cakeFull{
+  width:260px;
+  transition:0.4s ease;
+}
+
+.half{
+  position:absolute;
+  width:50%;
+  top:0;
+  opacity:0;
+  transition:0.7s ease;
+}
+#rightHalf{ left:50%; }
+
+#nameTag{
+  position:absolute;
+  width:100%;
+  bottom:20px;
+  text-align:center;
+  font-size:22px;
+  color:white;
+  font-weight:700;
+  text-shadow:0 0 8px black;
+  pointer-events:none;
+}
+
+button{
+  margin-top:20px;
+  display:none;
+  padding:12px 24px;
+  border-radius:30px;
+  background:#ff4e84;
+  color:white;
+  font-size:17px;
+  border:none;
+  cursor:pointer;
+}
+button:hover{ transform:scale(1.1); }
+
 .heart{
   position:fixed;
-  color:pink;
-  font-size:22px;
-  animation:floatUp 1.8s ease-out forwards;
+  font-size:28px;
+  animation:floatUp 1.4s ease-out forwards;
 }
-@keyframes floatUp {
-  0% { opacity:1; transform:translateY(0) scale(1); }
-  100% { opacity:0; transform:translateY(-140px) scale(1.8); }
+
+@keyframes floatUp{
+  0%{ opacity:1; transform:translateY(0) scale(1); }
+  100%{ opacity:0; transform:translateY(-150px) scale(1.7); }
 }
 </style>
 </head>
 <body>
 
-<audio id="bgMusic" loop>
-  <source src="assets/music.mp3" type="audio/mpeg">
-</audio>
+<h1 id="title"></h1>
 
-<div class="content">
-  <h1 id="title"></h1>
-  <p>Tap the cute cake to cut it 🎂💖</p>
+<div id="cakeBox">
 
-  <canvas id="cakeCanvas"></canvas>
+  <!-- FULL CAKE IMAGE -->
+  <img id="cakeFull" src="images/cake.png">
 
-  <button id="nextBtn" onclick="next()">Next ➜</button>
+  <!-- NAME ON CAKE -->
+  <div id="nameTag"></div>
+
+  <!-- LEFT HALF -->
+  <img id="leftHalf" class="half" src="images/cake.png">
+
+  <!-- RIGHT HALF -->
+  <img id="rightHalf" class="half" src="images/cake.png">
+
 </div>
 
+<button id="nextBtn" onclick="next()">Next ➜</button>
+
 <script>
-// 🌸 Restore name
-var princess = localStorage.getItem("bdayName") || "My Love";
-document.getElementById("title").innerText = "Happy Birthday " + princess + " ❤️";
+// Get name
+let girl = localStorage.getItem("bdayName") || "My Love";
 
-// 🎵 Music auto-play
-const music = document.getElementById("bgMusic");
-document.addEventListener("click", () => { music.volume = 0.4; music.play(); }, { once:true });
+// Title
+document.getElementById("title").innerText = "Happy Birthday " + girl + " ❤️";
 
-// 🎂 THREE.JS CAKE
-const canvas = document.getElementById("cakeCanvas");
-const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
-renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+// Name on cake
+document.getElementById("nameTag").innerText = girl;
 
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(45, canvas.clientWidth/canvas.clientHeight, 0.1, 100);
-camera.position.set(0, 1.8, 4);
-
-const controls = new THREE.OrbitControls(camera, renderer.domElement);
-controls.enableZoom = false;
-
-// 🌟 Lights
-const light1 = new THREE.PointLight(0xffffff, 1.2);
-light1.position.set(3,3,3);
-scene.add(light1);
-scene.add(new THREE.AmbientLight(0xffcce5, 0.6));
-
-// 🧁 Cake Base
-const baseGeo = new THREE.CylinderGeometry(1.2,1.2,0.7,64);
-const baseMat = new THREE.MeshPhongMaterial({ color:"#ff6b81", shininess:40 });
-const cakeBase = new THREE.Mesh(baseGeo, baseMat);
-scene.add(cakeBase);
-
-// 🧁 Frosting
-const frostGeo = new THREE.CylinderGeometry(1.25,1.25,0.32,64);
-const frostMat = new THREE.MeshPhongMaterial({ color:"#ffe4ec", shininess:80 });
-const cakeFrost = new THREE.Mesh(frostGeo, frostMat);
-cakeFrost.position.y = 0.38;
-scene.add(cakeFrost);
-
-// 🕯 Candle
-const candleGeo = new THREE.CylinderGeometry(0.09,0.09,0.9,32);
-const candleMat = new THREE.MeshPhongMaterial({ color:"#fffaf5" });
-const candle = new THREE.Mesh(candleGeo, candleMat);
-candle.position.y = 0.95;
-scene.add(candle);
-
-// 🔥 Flame
-const flameGeo = new THREE.SphereGeometry(0.12, 32, 32);
-const flameMat = new THREE.MeshBasicMaterial({ color:"#ffcf4d" });
-const flame = new THREE.Mesh(flameGeo, flameMat);
-flame.position.y = 1.35;
-scene.add(flame);
-
-// 🔪 Cut Animation
+// Cake split animation
 let cut = false;
-let cutAngle = 0;
 
-canvas.addEventListener("click", () => {
+document.getElementById("cakeBox").addEventListener("click", () => {
   if(cut) return;
   cut = true;
-  heartBurst();
 
-  const cutInterval = setInterval(() => {
-    cutAngle += 0.04;
-    cakeFrost.rotation.y = cutAngle;
-    cakeBase.rotation.y = cutAngle;
+  let full = document.getElementById("cakeFull");
+  let left = document.getElementById("leftHalf");
+  let right = document.getElementById("rightHalf");
 
-    if(cutAngle >= Math.PI/3){
-      clearInterval(cutInterval);
-      document.getElementById("nextBtn").style.display = "inline-block";
-    }
-  }, 16);
+  full.style.opacity = "0";
+
+  left.style.opacity = "1";
+  right.style.opacity = "1";
+
+  left.style.transform = "translateX(-70px)";
+  right.style.transform = "translateX(70px)";
+
+  burstHearts();
+
+  setTimeout(()=>{
+    document.getElementById("nextBtn").style.display="inline-block";
+  },700);
 });
 
-// 💖 Floating hearts
-function heartBurst(){
+// Hearts effect
+function burstHearts(){
   for(let i=0;i<15;i++){
-    let h = document.createElement("div");
-    h.className = "heart";
-    h.innerHTML = "❤️";
-    h.style.left = (window.innerWidth/2 - 20 + Math.random()*80 - 40) + "px";
-    h.style.top = (window.innerHeight/2 + 0) + "px";
+    let h=document.createElement("div");
+    h.className="heart";
+    h.innerHTML="❤️";
+    h.style.left=(window.innerWidth/2 + Math.random()*60 - 30) + "px";
+    h.style.top=(window.innerHeight/2 - 50) + "px";
     document.body.appendChild(h);
-    setTimeout(()=>h.remove(),1800);
+    setTimeout(()=>h.remove(),1500);
   }
 }
-
-// 🎞 Animation loop
-function animate(){
-  cakeBase.rotation.y += 0.003;
-  cakeFrost.rotation.y += 0.003;
-  flame.scale.y = 1 + Math.sin(Date.now()/120)*0.2;
-  renderer.render(scene,camera);
-  requestAnimationFrame(animate);
-}
-animate();
 
 function next(){
   window.location.href = "album.html";
