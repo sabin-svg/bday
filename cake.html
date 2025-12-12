@@ -7,6 +7,9 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/controls/OrbitControls.js"></script>
+
 <style>
 body{
   margin:0;padding:0;
@@ -20,70 +23,37 @@ body::after{
   content:"";position:absolute;inset:0;
   background:rgba(0,0,0,0.45);backdrop-filter:blur(2px);
 }
-
 .content{position:relative;z-index:10;}
-
 h1{
   font-family:'Great Vibes',cursive;font-size:52px;margin-bottom:10px;
   color:#ffdce9;text-shadow:0 0 20px rgba(255,60,120,0.6);
 }
 p{margin-bottom:18px;color:#ffe5eb;}
-
-.cakeBox{
-  position:relative;
-  width:330px;
-  height:auto;
-}
-
-#cakeImage{
-  width:100%;
+#cakeCanvas{
+  width:330px;height:330px;
+  background:rgba(255,255,255,0.08);
   border-radius:20px;
-  transition:0.3s;
   box-shadow:0 0 40px rgba(255,0,60,0.4);
-  cursor:pointer;
+  backdrop-filter:blur(4px);
 }
-
-/* Slice overlay */
-.slice{
-  position:absolute;
-  left:0; top:0;
-  width:100%; height:100%;
-  background:url("images/Red-Velvet-Layer-Cake.jpg") center/cover no-repeat;
-  border-radius:20px;
-  clip-path:polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
-  transform-origin:left;
-  transform:scaleX(0);
-  transition:0.8s ease;
-  pointer-events:none;
-}
-
-/* Shake animation */
-@keyframes shake {
-  0% { transform:rotate(0deg); }
-  25% { transform:rotate(1deg); }
-  50% { transform:rotate(-1.5deg); }
-  75% { transform:rotate(1deg); }
-  100% { transform:rotate(0deg); }
-}
-
 button{
   padding:12px 30px;border:none;border-radius:30px;cursor:pointer;
   background:linear-gradient(90deg,#ff2f4b,#ff6b81);color:white;font-weight:600;
   box-shadow:0 0 20px rgba(255,60,120,0.7);margin-top:28px;
+  display:none;
 }
 button:hover{transform:scale(1.05);}
 
-.confetti{
+/* cute hearts */
+.heart{
   position:fixed;
-  width:14px;height:14px;
-  background:pink;
-  transform:rotate(45deg);
-  border-radius:3px;
-  animation:fall 2s linear forwards;
+  color:pink;
+  font-size:22px;
+  animation:floatUp 1.8s ease-out forwards;
 }
-
-@keyframes fall {
-  to { transform:translateY(800px) rotate(360deg); opacity:0; }
+@keyframes floatUp {
+  0% { opacity:1; transform:translateY(0) scale(1); }
+  100% { opacity:0; transform:translateY(-140px) scale(1.8); }
 }
 </style>
 </head>
@@ -95,63 +65,114 @@ button:hover{transform:scale(1.05);}
 
 <div class="content">
   <h1 id="title"></h1>
-  <p>Click the cake to cut it 🎂💖</p>
+  <p>Tap the cute cake to cut it 🎂💖</p>
 
-  <div class="cakeBox">
-    <img id="cakeImage" src="images/Red-Velvet-Layer-Cake.jpg">
-    <div class="slice" id="slice"></div>
-  </div>
+  <canvas id="cakeCanvas"></canvas>
 
-  <button id="nextBtn" onclick="next()" style="display:none;">Next ➜</button>
+  <button id="nextBtn" onclick="next()">Next ➜</button>
 </div>
 
 <script>
-// Restore name
+// 🌸 Restore name
 var princess = localStorage.getItem("bdayName") || "My Love";
 document.getElementById("title").innerText = "Happy Birthday " + princess + " ❤️";
 
-// Music logic
+// 🎵 Music auto-play
 const music = document.getElementById("bgMusic");
 document.addEventListener("click", () => { music.volume = 0.4; music.play(); }, { once:true });
 
-// Cut logic
-let cut = false;
-const cakeImage = document.getElementById("cakeImage");
-const slice = document.getElementById("slice");
-const nextBtn = document.getElementById("nextBtn");
+// 🎂 THREE.JS CAKE
+const canvas = document.getElementById("cakeCanvas");
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
+renderer.setSize(canvas.clientWidth, canvas.clientHeight);
 
-cakeImage.addEventListener("click", () =>{
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, canvas.clientWidth/canvas.clientHeight, 0.1, 100);
+camera.position.set(0, 1.8, 4);
+
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.enableZoom = false;
+
+// 🌟 Lights
+const light1 = new THREE.PointLight(0xffffff, 1.2);
+light1.position.set(3,3,3);
+scene.add(light1);
+scene.add(new THREE.AmbientLight(0xffcce5, 0.6));
+
+// 🧁 Cake Base
+const baseGeo = new THREE.CylinderGeometry(1.2,1.2,0.7,64);
+const baseMat = new THREE.MeshPhongMaterial({ color:"#ff6b81", shininess:40 });
+const cakeBase = new THREE.Mesh(baseGeo, baseMat);
+scene.add(cakeBase);
+
+// 🧁 Frosting
+const frostGeo = new THREE.CylinderGeometry(1.25,1.25,0.32,64);
+const frostMat = new THREE.MeshPhongMaterial({ color:"#ffe4ec", shininess:80 });
+const cakeFrost = new THREE.Mesh(frostGeo, frostMat);
+cakeFrost.position.y = 0.38;
+scene.add(cakeFrost);
+
+// 🕯 Candle
+const candleGeo = new THREE.CylinderGeometry(0.09,0.09,0.9,32);
+const candleMat = new THREE.MeshPhongMaterial({ color:"#fffaf5" });
+const candle = new THREE.Mesh(candleGeo, candleMat);
+candle.position.y = 0.95;
+scene.add(candle);
+
+// 🔥 Flame
+const flameGeo = new THREE.SphereGeometry(0.12, 32, 32);
+const flameMat = new THREE.MeshBasicMaterial({ color:"#ffcf4d" });
+const flame = new THREE.Mesh(flameGeo, flameMat);
+flame.position.y = 1.35;
+scene.add(flame);
+
+// 🔪 Cut Animation
+let cut = false;
+let cutAngle = 0;
+
+canvas.addEventListener("click", () => {
   if(cut) return;
   cut = true;
+  heartBurst();
 
-  cakeImage.style.animation = "shake 0.4s";
+  const cutInterval = setInterval(() => {
+    cutAngle += 0.04;
+    cakeFrost.rotation.y = cutAngle;
+    cakeBase.rotation.y = cutAngle;
 
-  // reveal slice
-  setTimeout(() => {
-    slice.style.transform = "scaleX(1)";
-  }, 200);
-
-  // show next button
-  setTimeout(() => {
-    nextBtn.style.display = "inline-block";
-  }, 900);
-
-  spawnConfetti();
+    if(cutAngle >= Math.PI/3){
+      clearInterval(cutInterval);
+      document.getElementById("nextBtn").style.display = "inline-block";
+    }
+  }, 16);
 });
 
-// confetti hearts
-function spawnConfetti(){
-  for(let i=0;i<50;i++){
-    let c = document.createElement("div");
-    c.classList.add("confetti");
-    c.style.left = Math.random()*window.innerWidth + "px";
-    c.style.top = "-20px";
-    document.body.appendChild(c);
-    setTimeout(()=>c.remove(),2000);
+// 💖 Floating hearts
+function heartBurst(){
+  for(let i=0;i<15;i++){
+    let h = document.createElement("div");
+    h.className = "heart";
+    h.innerHTML = "❤️";
+    h.style.left = (window.innerWidth/2 - 20 + Math.random()*80 - 40) + "px";
+    h.style.top = (window.innerHeight/2 + 0) + "px";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),1800);
   }
 }
 
-function next(){ window.location.href="album.html"; }
+// 🎞 Animation loop
+function animate(){
+  cakeBase.rotation.y += 0.003;
+  cakeFrost.rotation.y += 0.003;
+  flame.scale.y = 1 + Math.sin(Date.now()/120)*0.2;
+  renderer.render(scene,camera);
+  requestAnimationFrame(animate);
+}
+animate();
+
+function next(){
+  window.location.href = "album.html";
+}
 </script>
 
 </body>
