@@ -4,48 +4,101 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hey My Beautiful ❤️</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
+*{ margin:0; padding:0; box-sizing:border-box; }
+
 body{
-  height:100vh;
-  width:100vw;
+  height:100vh; width:100vw;
   background:url("images/Heart-shape-tree-with-red-leaves-on-red-flower-field.jpg") center/cover no-repeat;
-  display:flex;align-items:center;justify-content:center;
+  display:flex; align-items:center; justify-content:center;
   font-family:'Poppins',sans-serif;
-  position:relative;text-align:center;color:#fff;
+  position:relative;
+  overflow:hidden;
+  color:#fff;
 }
+
+/* dark overlay */
 body::after{
-  content:"";position:absolute;inset:0;
-  background:rgba(0,0,0,0.35);backdrop-filter:blur(2px);
+  content:""; position:absolute; inset:0;
+  background:rgba(0,0,0,0.35);
+  backdrop-filter:blur(3px);
 }
+
+/* Main glass card */
 .main{
-  position:relative;z-index:10;
-  background:rgba(255,255,255,0.06);
-  padding:32px 38px;border-radius:18px;
-  backdrop-filter:blur(6px);
-  box-shadow:0 0 30px rgba(0,0,0,0.5);
+  position:relative; z-index:10;
+  background:rgba(255,255,255,0.08);
+  padding:35px 40px;
+  border-radius:20px;
+  backdrop-filter:blur(8px);
+  box-shadow:0 0 35px rgba(255,0,80,0.4);
+  text-align:center;
+  animation:fadeIn 1.2s ease forwards;
 }
+
+@keyframes fadeIn{
+  from{ opacity:0; transform:scale(0.9); }
+  to{ opacity:1; transform:scale(1); }
+}
+
 h1{
   font-family:'Great Vibes',cursive;
-  font-size:44px;margin-bottom:10px;
+  font-size:50px;
+  margin-bottom:10px;
+  text-shadow:0 0 20px rgba(255,60,120,0.7);
 }
-p{margin-bottom:20px;color:#ffe9ef;}
+
+p{
+  color:#ffe4ec;
+  margin-bottom:20px;
+}
+
 input{
-  padding:12px 18px;border:none;border-radius:10px;
-  background:rgba(255,255,255,0.22);color:white;
-  width:230px;text-align:center;margin-bottom:20px;outline:none;
+  padding:12px 18px;
+  border:none;
+  border-radius:12px;
+  background:rgba(255,255,255,0.22);
+  color:#fff;
+  width:250px;
+  text-align:center;
+  outline:none;
+  margin-bottom:20px;
+  font-size:16px;
 }
+
 button{
-  padding:12px 26px;border:none;border-radius:30px;
+  padding:12px 26px;
+  border:none;
+  border-radius:30px;
   background:linear-gradient(90deg,#ff2f4b,#ff6b81);
-  color:white;font-weight:600;cursor:pointer;
+  color:white;
+  font-weight:600;
+  cursor:pointer;
   box-shadow:0 0 18px rgba(255,80,120,0.7);
   transition:0.3s;
 }
-button:hover{transform:scale(1.05);}
-small{display:block;margin-top:8px;color:#ffdce4;}
+
+button:hover{
+  transform:scale(1.05);
+}
+
+/* Heart particles */
+.heart{
+  position:fixed;
+  font-size:22px;
+  color:pink;
+  pointer-events:none;
+  animation:fly 4s linear forwards;
+  opacity:0.8;
+}
+
+@keyframes fly{
+  0% { transform:translateY(100vh) scale(0.8); opacity:0.8; }
+  100% { transform:translateY(-20vh) scale(1.8); opacity:0; }
+}
 </style>
 </head>
 <body>
@@ -59,27 +112,43 @@ small{display:block;margin-top:8px;color:#ffdce4;}
   <p>Before we start this surprise, tell me your name Princess 💕</p>
 
   <input type="text" id="name" placeholder="Type your name...">
-  
+
   <button onclick="next()">Continue ➜</button>
-  <small>(Tap anywhere if music doesn't start)</small>
+  <small style="display:block;margin-top:10px;color:#ffdce4;">(Tap anywhere if music doesn't start)</small>
 </div>
 
 <script>
 const music = document.getElementById("bgMusic");
 
-// Try autoplay
+// Auto play music
 document.addEventListener("click", () => {
- music.volume = 0.35;
+ music.volume = 0.4;
  music.play().catch(()=>{});
 }, { once:true });
 
+// Save name + continue
 function next(){
   let n = document.getElementById("name").value.trim();
-  if(!n){n = "My Love";}
+  if(!n){ n = "My Love"; }
   localStorage.setItem("bdayName", n);
-  music.play();
   window.location.href = "cake.html";
 }
+
+// Floating hearts
+function spawnHearts(){
+  let h = document.createElement("div");
+  h.className = "heart";
+  h.innerHTML = "❤️";
+
+  h.style.left = Math.random()*window.innerWidth + "px";
+  h.style.bottom = "-20px";
+
+  document.body.appendChild(h);
+
+  setTimeout(()=>h.remove(), 4000);
+}
+
+setInterval(spawnHearts, 250);
 </script>
 
 </body>
